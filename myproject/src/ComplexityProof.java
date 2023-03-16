@@ -9,15 +9,15 @@ import org.knowm.xchart.style.markers.SeriesMarkers;
 public class ComplexityProof {
 
     // THE FOLLOWING ARE HELPER METHODS TO GENERATE RANDOM INSTANCES OF THE PROBLEM:
-    public static void buildMaxHeap(int[] A) {
-        for (int i = A.length / 2; i >= 1; i--) {
-            System.out.println("building heap at node = " +i);
-            maxHeapify(A, i, A.length);
+    public static void buildMaxHeap(ArrayList<Integer> A) {
+        for (int i = A.size() / 2; i >= 1; i--) {
+            //System.out.println("building heap at node = " +i);
+            maxHeapify(A, i, A.size());
         }
         //print(A);
     }
 
-    public static void maxHeapify(int[] A, int node, int size) {
+    public static void maxHeapify(ArrayList<Integer> A, int node, int size) {
         //System.out.println("calling maxHeapify(A," + node + ")");
 
         int left = 2 * node;
@@ -26,21 +26,24 @@ public class ComplexityProof {
 
         //check left child
         if (left <= size){
-            if (A[left - 1] > A[node - 1]) {
+            if (A.get(left - 1) > A.get(node - 1) ){
                 largest = left;
             }
         }
         //then check right child
         if (right <= size){
-            if (A[right - 1] > A[largest - 1]) {
+            if (A.get(right - 1) > A.get(largest - 1)) {
                 largest = right;
             }
         }
         //switch the bigger child to the parent node
         if (largest != node) {
-            int parent = A[node - 1]; int largechild = A[largest-1];
-            A[node - 1] = largechild; A[largest - 1] = parent;
-            print(A);
+            int parent = A.get(node - 1);
+            int largechild = A.get(largest-1);
+            A.remove(node-1);
+            A.add(node-1,largechild);
+            A.remove(largest-1);
+            A.add(largest-1,parent);
             maxHeapify(A, largest,size); //call again to see if large child has bigger children
 
         }
@@ -54,13 +57,14 @@ public class ComplexityProof {
         System.out.println(s);
     }
 
-    public static int[] generateRandomArray(int n){
+    public static ArrayList<Integer> generateArrayList(int n){
         Random rand = new Random();
-        int largest = rand.nextInt(100,1000);
+        int largest = n;
         int heapsize =  n;
-        int[] A = new int[heapsize];
+        ArrayList<Integer> A = new ArrayList<>();
+
         for (int i = 0; i < heapsize; i++){
-            A[i] = rand.nextInt(0,largest-1);
+            A.add(i+1);
 
         }
         return A;
@@ -68,31 +72,29 @@ public class ComplexityProof {
     }
 
 
-    public static void increaseKey(int[] A, int i, int key){
-        if (key < A[i]){
+    public static void increaseKey(ArrayList<Integer> A, int i, int key){
+        if (key < A.get(i)){
             return;
         }
-        A[i] = key;
-        while (i>1 && A[i] > A[(i/2)]){
+        A.remove(i);
+        A.add(key);
+        while (i>1 && A.get(i) > A.get(i/2)){
             //exchange A[i] with parent
-            int temp = A[i/2];
+            int temp = A.get(i/2);
             //System.out.println("temp is now " + temp);
-            A[i/2] = key;
-            A[i] = temp;
+            A.remove(i/2);
+            A.add((i/2), key);
+            A.remove(i);
+            A.add(i,temp);
             i = i/2;
         }
 
     }
 
-    public static int[] insert(int[] A, int key){
-        int[] expandedA  = new int[A.length+1];
+    public static void insert(ArrayList<Integer> A, int key){
 
-        for(int i =0; i < A.length; i++) {
-            expandedA[i] = A[i];
-        }
-        expandedA[A.length] = -1000;
-        increaseKey(expandedA,expandedA.length-1,key);
-        return expandedA;
+        A.add(-10000);
+        increaseKey(A,A.size()-1,key);
 
     }
 
@@ -104,17 +106,18 @@ public class ComplexityProof {
 
     public static double runInsertion(int n) {
 
-        int[] A  =generateRandomArray(n);
+        ArrayList<Integer> A  =generateArrayList(n);
         buildMaxHeap(A);
         Random rand = new Random();
-        int key = rand.nextInt(1500);
+
+       int key = n+1;
 
         double start = System.nanoTime();
         insert(A,key);
         double end = System.nanoTime();
 
         // execution time in microseconds
-        double duration = (end - start) / 1000;
+        double duration = (end - start) / 10000;
         return duration;
     }
 
@@ -122,16 +125,24 @@ public class ComplexityProof {
     // runs the Bellman-Ford algorithm on a series of samples and outputs a chart of the runtime
     public static void main(String[] args) {
         // number of sample executions
-        int samples = 100;
+
+        ArrayList<Integer> array = new ArrayList<>();
+        array = generateArrayList(10);
+        System.out.println(array);
+        buildMaxHeap(array);
+        System.out.println(array);
+
+        int samples = 200;
 
         double[] execution_times = new double[samples];
         double[] ns = new double[samples];
-        int n = 10;
+        int n = 10000;
         for (int i=0; i<samples; i++) {
+            n = 100 * (i+2);
             // run bellman ford on a random graph with n vertices and 2n edges
             execution_times[i] = runInsertion(n);
-            ns[i] += n;
-            n+=1;
+            ns[i] = n;
+
 
         }
 
@@ -152,6 +163,8 @@ public class ComplexityProof {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
     }
 
 }
