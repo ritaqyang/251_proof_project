@@ -72,12 +72,13 @@ public class ComplexityProof {
     }
 
 
-    public static void increaseKey(ArrayList<Integer> A, int i, int key){
+    public static int increaseKey(ArrayList<Integer> A, int i, int key){
         if (key < A.get(i)){
-            return;
+            return 0;
         }
         A.remove(i);
         A.add(key);
+        int count = 0;
         while (i>1 && A.get(i) > A.get(i/2)){
             //exchange A[i] with parent
             int temp = A.get(i/2);
@@ -87,7 +88,9 @@ public class ComplexityProof {
             A.remove(i);
             A.add(i,temp);
             i = i/2;
+            count += 1;
         }
+        return count;
 
     }
 
