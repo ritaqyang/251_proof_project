@@ -78,7 +78,7 @@ public class Heapsort{
             System.out.println("temp is now " + temp);
             A[i/2] = key;
             A[i] = temp;
-            increaseKey(A,i/2,key);
+            i = i/2;
         }
 
     }

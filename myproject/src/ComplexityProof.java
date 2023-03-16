@@ -14,11 +14,11 @@ public class ComplexityProof {
             System.out.println("building heap at node = " +i);
             maxHeapify(A, i, A.length);
         }
-        print(A);
+        //print(A);
     }
 
     public static void maxHeapify(int[] A, int node, int size) {
-        System.out.println("calling maxHeapify(A," + node + ")");
+        //System.out.println("calling maxHeapify(A," + node + ")");
 
         int left = 2 * node;
         int right = 2 * node + 1;
@@ -54,13 +54,13 @@ public class ComplexityProof {
         System.out.println(s);
     }
 
-    public static int[] generateRandomArray(){
+    public static int[] generateRandomArray(int n){
         Random rand = new Random();
-        int largest = rand.nextInt(1000);
-        int heapsize = rand.nextInt(100);
+        int largest = rand.nextInt(100,1000);
+        int heapsize =  n;
         int[] A = new int[heapsize];
         for (int i = 0; i < heapsize; i++){
-            A[i] = rand.nextInt(largest-1);
+            A[i] = rand.nextInt(0,largest-1);
 
         }
         return A;
@@ -76,10 +76,10 @@ public class ComplexityProof {
         while (i>1 && A[i] > A[(i/2)]){
             //exchange A[i] with parent
             int temp = A[i/2];
-            System.out.println("temp is now " + temp);
+            //System.out.println("temp is now " + temp);
             A[i/2] = key;
             A[i] = temp;
-            increaseKey(A,i/2,key);
+            i = i/2;
         }
 
     }
@@ -101,28 +101,16 @@ public class ComplexityProof {
 
     // runs the Bellman-Ford algoritm on a random graph
     // returns the time of execution in microseconds
-    /**
-    public static double runBellmanFord(int nVertices, int nEdges) {
-        Graph g = generateRandomGraph(nVertices, nEdges);
-        Vertex s = (Vertex) g.vertexSet.toArray()[0];
-        EdgeFunction w = generateRandomFunction(g.edgeSet);
+
+    public static double runInsertion(int n) {
+
+        int[] A  =generateRandomArray(n);
+        buildMaxHeap(A);
+        Random rand = new Random();
+        int key = rand.nextInt(1500);
 
         double start = System.nanoTime();
-        bellmanFord(g, w, s);
-        double end = System.nanoTime();
-
-        // execution time in microseconds
-        double duration = (end - start) / 1000;
-        return duration;
-    }
-
-    public static double runInsertino(int[]A, int i) {
-        Graph g = generateRandomGraph(nVertices, nEdges);
-        Vertex s = (Vertex) g.vertexSet.toArray()[0];
-        EdgeFunction w = generateRandomFunction(g.edgeSet);
-
-        double start = System.nanoTime();
-        bellmanFord(g, w, s);
+        insert(A,key);
         double end = System.nanoTime();
 
         // execution time in microseconds
@@ -135,24 +123,26 @@ public class ComplexityProof {
     public static void main(String[] args) {
         // number of sample executions
         int samples = 100;
-        double[] ns = new double[samples];
+
         double[] execution_times = new double[samples];
+        double[] ns = new double[samples];
         int n = 10;
         for (int i=0; i<samples; i++) {
             // run bellman ford on a random graph with n vertices and 2n edges
-            execution_times[i] = runBellmanFord(n, 2*n);
-            ns[i] = n;
-            n += 10;
+            execution_times[i] = runInsertion(n);
+            ns[i] += n;
+            n+=1;
+
         }
 
         // create chart
-        XYChart chart = QuickChart.getChart("Execution Time of Insertion of a node into a maxHeap", "Number of Vertices", "Execution Time (us)", "Bellman-Ford Runtime", ns, execution_times);
+        XYChart chart = QuickChart.getChart("Execution Time of Insertion of a node into a maxHeap", "Heap Size", "Execution Time (us)", "Runtime", ns, execution_times);
         double[] n2s = new double[samples];
         // add reference quadratic
         for (int i=0; i<samples; i++) {
-            n2s[i] = (Math.pow(ns[i], 2)/25 + 500);
+            n2s[i] = (Math.log(ns[i]));
         }
-        chart.addSeries("n^2 / 25 + 500", ns, n2s).setMarker(SeriesMarkers.NONE);;
+        chart.addSeries("logn", ns, n2s).setMarker(SeriesMarkers.NONE);;
         // display chart
         //new SwingWrapper<>(chart).displayChart();
 
@@ -163,5 +153,5 @@ public class ComplexityProof {
             e.printStackTrace();
         }
     }
-     **/
+
 }
