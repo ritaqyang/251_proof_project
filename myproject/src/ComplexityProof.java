@@ -79,8 +79,9 @@ public class ComplexityProof {
         A.remove(i);
         A.add(key);
         int count = 0;
-        while (i>1 && A.get(i) > A.get(i/2)){
+        while (i>=1 && A.get(i) > A.get(i/2)){
             //exchange A[i] with parent
+            count += 1;
             int temp = A.get(i/2);
             //System.out.println("temp is now " + temp);
             A.remove(i/2);
@@ -88,44 +89,37 @@ public class ComplexityProof {
             A.remove(i);
             A.add(i,temp);
             i = i/2;
-            count += 1;
+
         }
         return count;
 
     }
 
-    public static void insert(ArrayList<Integer> A, int key){
+    //returns the number of times going up the nodes
+    //until finding the correct place for the key
+    public static int insert(ArrayList<Integer> A, int key){
 
+        int count = 0;
         A.add(-10000);
-        increaseKey(A,A.size()-1,key);
+        count = increaseKey(A,A.size()-1,key);
+        return count;
 
     }
 
-    // generates a random nonzero integer in range (-100, 100)
 
-
-    // runs the Bellman-Ford algoritm on a random graph
-    // returns the time of execution in microseconds
-
+    //calculates hte worst case scenario
+    //when the key is bigger than the root (which is the largest)
     public static double runInsertion(int n) {
 
-        ArrayList<Integer> A  =generateArrayList(n);
+        ArrayList<Integer> A = generateArrayList(n);
         buildMaxHeap(A);
-        Random rand = new Random();
+        int key = A.get(0) + 1;
 
-       int key = n+1;
-
-        double start = System.nanoTime();
-        insert(A,key);
-        double end = System.nanoTime();
-
-        // execution time in microseconds
-        double duration = (end - start) / 10000;
-        return duration;
+        return insert(A, key);
     }
 
 
-    // runs the Bellman-Ford algorithm on a series of samples and outputs a chart of the runtime
+    // runs the algorithm on 2000 samples incrementing 10 in heapsize
     public static void main(String[] args) {
         // number of sample executions
 
@@ -134,14 +128,17 @@ public class ComplexityProof {
         System.out.println(array);
         buildMaxHeap(array);
         System.out.println(array);
+        insert(array,15);
+        System.out.println(array);
 
-        int samples = 200;
+
+        int samples = 2000;
 
         double[] execution_times = new double[samples];
         double[] ns = new double[samples];
-        int n = 10000;
+        int n =0;
         for (int i=0; i<samples; i++) {
-            n = 100 * (i+2);
+            n += 10;
             // run bellman ford on a random graph with n vertices and 2n edges
             execution_times[i] = runInsertion(n);
             ns[i] = n;
@@ -154,9 +151,9 @@ public class ComplexityProof {
         double[] n2s = new double[samples];
         // add reference quadratic
         for (int i=0; i<samples; i++) {
-            n2s[i] = (Math.log(ns[i]));
+            n2s[i] = (Math.log(ns[i])/Math.log(2));
         }
-        chart.addSeries("logn", ns, n2s).setMarker(SeriesMarkers.NONE);;
+        chart.addSeries("log2n", ns, n2s).setMarker(SeriesMarkers.NONE);;
         // display chart
         //new SwingWrapper<>(chart).displayChart();
 
