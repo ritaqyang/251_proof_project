@@ -1,46 +1,61 @@
 public class Heapsort{
-    public int[] startingArray;
-    public int size;
-    Heapsort(int[] startingArray) {
-        this.size = startingArray.length;
-        this.startingArray = startingArray;
-    }
+
     public static void main(String[] args){
-        int[] h1 = {16,14,10,8,7,9,3,2,15,1};
-        Heapsort heap1 = new Heapsort(h1);
-        int[] h2 = heap1.insert(h1,19);
-        print(h2);
+
+        int[]edge1= {16,16,15,15,14,10,8,8,7,9,3,2,4,1,1,1};
+        int[]edge2 = {16,16,16,16,16,16,16,16,16,8};
+        int[]general = {16,14,10,8,7,9,3,2,4,1};
+        heapSort(edge2);
+
 
     }
     public static void print(int[] A){
         String s = "";
         for (int E : A){
-            s += E + ", ";
+            s += E + " ";
         }
+
         System.out.println(s);
     }
-    public static void sort(int[] A) {
-        buildMaxHeap(A);
+    public static void heapSort(int[] A) {
+        buildMaxHeap(A); //first build a max heap
         int size = A.length;
         //iterate (size - 1 ) times
-        for (int i = size; i > 1; i--) {
-            int lastnode = A[size - 1];int firstnode = A[0];
-            A[size - 1] = firstnode; A[0] = lastnode; //store head to last spot in the array
+        for (int i = size; i >= 2; i--) {
+            int i2 = i + 1;
+            if (i == A.length) {
+                System.out.println("At initiation, maxheap is A[1..." + i + "] and the second subarray is empty.");
+            } else if (i == A.length - 1) {
+                System.out.println("At beginning of an interation during maintainence, " +
+                        "maxheap is A[1..." + i + "] and the second subarray is A[" + i2 + "].");
+            } else if (i == 2) {
+                System.out.println("At termination, before execution, maxheap is now of size 2");
+            } else {
+                System.out.println("At beginning of an interation during maintainence, " +
+                        "maxheap is A[1..." + i + "] and the second subarray is A[" + i2 + "..." + A.length + "].");
+            }
+
             print(A);
+            int lastnode = A[size - 1];
+            int firstnode = A[0];
+            A[size - 1] = firstnode;
+            A[0] = lastnode; //store head to last spot in the array
             size -= 1;
-            maxHeapify(A, 1,size);
+            maxHeapify(A, 1, size); //call on the new root
+            if (i == 2) {
+                System.out.println("At termination, after execution, the array is now sorted.");
+                print(A);
+            }
         }
     }
     public static void buildMaxHeap(int[] A) {
         for (int i = A.length / 2; i >= 1; i--) {
-            System.out.println("building heap at node = " +i);
             maxHeapify(A, i, A.length);
         }
-        print(A);
     }
 
     public static void maxHeapify(int[] A, int node, int size) {
-        System.out.println("calling maxHeapify(A," + node + ")");
+        //System.out.println("calling maxHeapify(A," + node + ")");
 
         int left = 2 * node;
         int right = 2 * node + 1;
@@ -62,7 +77,6 @@ public class Heapsort{
         if (largest != node) {
             int parent = A[node - 1]; int largechild = A[largest-1];
             A[node - 1] = largechild; A[largest - 1] = parent;
-            print(A);
             maxHeapify(A, largest,size); //call again to see if large child has bigger children
 
         }

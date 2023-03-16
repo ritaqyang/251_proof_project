@@ -62,7 +62,6 @@ public class ComplexityProof {
         int largest = n;
         int heapsize =  n;
         ArrayList<Integer> A = new ArrayList<>();
-
         for (int i = 0; i < heapsize; i++){
             A.add(i+1);
 
@@ -71,7 +70,8 @@ public class ComplexityProof {
 
     }
 
-
+//returns the number of times traversing up to the correct spot
+    //returns the length of path
     public static int increaseKey(ArrayList<Integer> A, int i, int key){
         if (key < A.get(i)){
             return 0;
@@ -83,7 +83,6 @@ public class ComplexityProof {
             //exchange A[i] with parent
             count += 1;
             int temp = A.get(i/2);
-            //System.out.println("temp is now " + temp);
             A.remove(i/2);
             A.add((i/2), key);
             A.remove(i);
@@ -92,13 +91,11 @@ public class ComplexityProof {
 
         }
         return count;
-
     }
 
     //returns the number of times going up the nodes
     //until finding the correct place for the key
     public static int insert(ArrayList<Integer> A, int key){
-
         int count = 0;
         A.add(-10000);
         count = increaseKey(A,A.size()-1,key);
@@ -114,7 +111,6 @@ public class ComplexityProof {
         ArrayList<Integer> A = generateArrayList(n);
         buildMaxHeap(A);
         int key = A.get(0) + 1;
-
         return insert(A, key);
     }
 
@@ -122,32 +118,21 @@ public class ComplexityProof {
     // runs the algorithm on 2000 samples incrementing 10 in heapsize
     public static void main(String[] args) {
         // number of sample executions
-
-        ArrayList<Integer> array = new ArrayList<>();
-        array = generateArrayList(10);
-        System.out.println(array);
-        buildMaxHeap(array);
-        System.out.println(array);
-        insert(array,15);
-        System.out.println(array);
-
-
         int samples = 2000;
 
         double[] execution_times = new double[samples];
-        double[] ns = new double[samples];
+        double[] ns = new double[samples];//size of heaps
         int n =0;
         for (int i=0; i<samples; i++) {
             n += 10;
-            // run bellman ford on a random graph with n vertices and 2n edges
+            // run insertion in a heap with size = n
             execution_times[i] = runInsertion(n);
             ns[i] = n;
-
-
         }
 
         // create chart
-        XYChart chart = QuickChart.getChart("Execution Time of Insertion of a node into a maxHeap", "Heap Size", "Execution Time (us)", "Runtime", ns, execution_times);
+        XYChart chart = QuickChart.getChart("Execution Time of Insertion of a node into a maxHeap",
+                "Heap Size", "Execution Time", "Runtime", ns, execution_times);
         double[] n2s = new double[samples];
         // add reference quadratic
         for (int i=0; i<samples; i++) {
