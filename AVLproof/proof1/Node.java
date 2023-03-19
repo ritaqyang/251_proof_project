@@ -1,3 +1,6 @@
+package AVLproof.proof1;
+
+import java.util.*;
 public class Node {
     //node class for the AVL tree
     //the following code was taken from: https://www.javatpoint.com/avl-tree-program-in-java. Developed by JavaTpoint

@@ -1,3 +1,6 @@
+package AVLproof.proof1;
+
+
 public class ConstructAVLTree {
 
     //class for constructing AVL tree

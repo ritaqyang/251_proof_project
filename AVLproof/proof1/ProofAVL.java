@@ -1,4 +1,4 @@
-
+package AVLproof.proof1;
 import java.util.Random;
 
 //The following is code to generate the data for the graph (written by me)

@@ -1,4 +1,7 @@
+package AVLproof.proof1;
+
 import java.util.*;
+
 //the following code was taken from:https://www.javatpoint.com/avl-tree-program-in-java. By JavaTpoint 2021
 //Comments and code marked with --- are my own
 
